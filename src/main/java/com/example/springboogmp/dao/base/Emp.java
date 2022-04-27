@@ -1,9 +1,14 @@
 package com.example.springboogmp.dao.base;//wangDD
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.springframework.stereotype.Repository;
+
+import java.lang.reflect.Type;
 
 //2022-01-2022/1/30-19:36
 @Repository
@@ -20,6 +25,7 @@ public class Emp {
      * job varchar(10) not null  #工作
      * )
      */
+    @TableId(value = "id",type = IdType.AUTO)
     private Integer id;
     private String empname;
     private String job;

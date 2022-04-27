@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.springboogmp.dao.interfaceMapper.EmpInterface">
+<!--        <select id="selectEmp" resultType="com.example.springboogmp.dao.base.Emp">-->
+<!--            select * from emp where emp_password=md5(#{emp_password}) and empid = #{empid}-->
+<!--        </select>-->
+
+</mapper>
