@@ -1,5 +1,6 @@
 package com.example.springboogmp.dao.base;//wangDD
 
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.Scope;
@@ -27,7 +28,8 @@ public class Menu {
     private String m_type;
     @ApiModelProperty("金额")
     private Double money;
-
+    @TableLogic
+    private Integer m_delete;
     public Menu() {
     }
 

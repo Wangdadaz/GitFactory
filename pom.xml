@@ -58,6 +58,12 @@
             <artifactId>pagehelper-spring-boot-starter</artifactId>
             <version>1.2.13</version>
         </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-generator</artifactId>
+            <version>3.5.2</version>
+        </dependency>
+
         <!--mysql 驱动-->
         <dependency>
             <groupId>mysql</groupId>

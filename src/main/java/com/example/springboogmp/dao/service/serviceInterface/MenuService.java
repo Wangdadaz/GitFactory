@@ -1,4 +1,4 @@
-package com.example.springboogmp.dao.service;//wangDD
+package com.example.springboogmp.dao.service.serviceInterface;//wangDD
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.springboogmp.dao.base.Menu;
