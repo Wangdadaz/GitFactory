@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="generator.mapper.DiningMapper">
+
+    <resultMap id="BaseResultMap" type="generator.domain.Dining">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="state" column="state" jdbcType="VARCHAR"/>
+            <result property="dindingName" column="dinding_name" jdbcType="VARCHAR"/>
+            <result property="tel" column="tel" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,state,dinding_name,
+        tel
+    </sql>
+</mapper>
