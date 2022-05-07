@@ -1,0 +1,41 @@
+
+# DataSource Config
+spring:
+  #  ?????
+  devtools:
+  restart:
+  enabled: true
+  # 设置重启的目录，添加目录的文件需要restart
+  additional-paths: src/main/java
+  # 解决项目自动重新编译后
+  datasource:
+    dynamic:
+      primary: master
+      strict: false
+      datasource:
+        master:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://localhost:3306/takeout?rewriteBatchedStatements=true&useUnicode=true&characterEncoding=utf8&serverTimezone=UTC&allowMultiQueries=true
+          username: root
+          password: root
+
+
+
+  main:
+    allow-circular-references: true
+  web:
+#    静态资源
+    resources:
+      static-locations: classpath:/backend/,classpath:/front/,classpath:/static/,classpath:/public/
+
+
+
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+  global-config:
+    db-config:
+      id-type: auto
+
