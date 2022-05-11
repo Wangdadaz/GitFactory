@@ -2,19 +2,19 @@ package com.wang.hm_takeout.dao.controller;//wangDD
 
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wang.hm_takeout.dao.common.R;
 import com.wang.hm_takeout.dao.domain.Employee;
 import com.wang.hm_takeout.dao.service.impl.EmployeeServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
+import java.util.Date;
 
 //2022-05-2022/5/6-21:44
 @Slf4j
@@ -49,9 +49,49 @@ public class EmpController {
             return R.error("用户不可用");
         }
 
-        request.getSession().setAttribute("employee",emp);
+        request.getSession().setAttribute("employee",one);
 
         return R.success(one);
     }
 
+    @PostMapping("/logout")
+    public R<String> logout(HttpServletRequest request){
+
+        request.getSession().removeAttribute("employee");
+
+        return R.success("退出成功");
+    }
+
+
+    @PostMapping
+    public R<String> insertEmp(@RequestBody Employee emp,HttpServletRequest request){
+//        @RequestBody Employee emp
+//        将前端返回的josn数据封装为employee对象，需保证返回的key值与employee中的属性值相同
+//        name: "wang", phone: "15809950712", sex: "1", idNumber: "111111111111111111", username: "545644
+            emp.setCreateTime(new Date());
+            emp.setUpdateTime(new Date());
+            emp.setPassword(DigestUtils.md5DigestAsHex("123456".getBytes()));
+        Employee employee1 = (Employee) request.getSession().getAttribute("employee");
+        emp.setCreateUser(employee1.getId());
+        emp.setUpdateUser(employee1.getId());
+        emp.setId(null);
+        employee.save(emp);
+        return R.success("增加成功");
+    }
+
+
+    @GetMapping("/page")
+    public R<Page> page(int page, int pageSize, String name){
+
+        log.info("获取的page{},获取的size{},获取的name{}",page,pageSize,name);
+
+        Page employeePage = new Page(page,pageSize);
+        LambdaQueryWrapper<Employee> employeeLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        employeeLambdaQueryWrapper.like(StringUtils.isNotEmpty(name),Employee::getName,name);
+
+        employee.page(employeePage,employeeLambdaQueryWrapper);
+
+
+        return R.success(employeePage);
+    }
 }

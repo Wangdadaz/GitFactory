@@ -3,10 +3,9 @@
 spring:
   #  ?????
   devtools:
-  restart:
-  enabled: true
+    restart:
   # 设置重启的目录，添加目录的文件需要restart
-  additional-paths: src/main/java
+      additional-paths: src/main/java
   # 解决项目自动重新编译后
   datasource:
     dynamic:
@@ -18,6 +17,10 @@ spring:
           url: jdbc:mysql://localhost:3306/takeout?rewriteBatchedStatements=true&useUnicode=true&characterEncoding=utf8&serverTimezone=UTC&allowMultiQueries=true
           username: root
           password: root
+#logging:
+#  pattern:
+#    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger- %msg%n"
+#    level: debu
 
 
 

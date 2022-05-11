@@ -3,7 +3,6 @@ package com.wang.hm_takeout.dao.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.wang.hm_takeout.dao.domain.Employee;
 import org.apache.ibatis.annotations.Mapper;
-import org.springframework.stereotype.Repository;
 
 /**
 * @author 86182
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Repository;
 * @Entity dao.domain.Employee
 */
 @Mapper
-@Repository
 public interface EmployeeMapper extends BaseMapper<Employee> {
 
 
