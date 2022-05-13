@@ -2,6 +2,7 @@ package com.wang.hm_takeout.dao.controller;//wangDD
 
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wang.hm_takeout.dao.common.R;
@@ -85,7 +86,7 @@ public class EmpController {
 
         log.info("获取的page{},获取的size{},获取的name{}",page,pageSize,name);
 
-        Page employeePage = new Page(page,pageSize);
+        Page<Employee> employeePage = new Page(page,pageSize);
         LambdaQueryWrapper<Employee> employeeLambdaQueryWrapper = new LambdaQueryWrapper<>();
         employeeLambdaQueryWrapper.like(StringUtils.isNotEmpty(name),Employee::getName,name);
 
@@ -93,5 +94,24 @@ public class EmpController {
 
 
         return R.success(employeePage);
+    }
+
+    @PutMapping
+    public R<String> update(@RequestBody Employee emp){
+//        {id: 3, status: 0} 响应的是一个josn对象 使用emp封装
+        log.info("修改前的emp对象{}",emp);
+        LambdaUpdateWrapper<Employee> employeeLambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+        boolean b = employee.updateById(emp);
+
+
+        return R.success(b ? "修改成功":"修改失败");
+    }
+
+    @GetMapping("/{id}")
+    public R<Employee> selectID(@PathVariable Long id){
+        log.info("获取到ID:{}",id);
+        Employee byId = employee.getById(id);
+        return R.success(byId);
+
     }
 }
