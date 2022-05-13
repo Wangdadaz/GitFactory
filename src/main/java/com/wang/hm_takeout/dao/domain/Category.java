@@ -47,16 +47,17 @@ public class Category implements Serializable {
      * 更新时间
      */
     private Date updateTime;
-
-    /**
-     * 创建人
-     */
-    private Long createUser;
-
     /**
      * 修改人
      */
     private Long updateUser;
+
+    /**
+     * 创建人
+     */
+    @TableField("create_user")
+    private Long createUser;
+
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
