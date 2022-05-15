@@ -49,12 +49,20 @@ public class CategoryController {
     }
 
     @DeleteMapping
-    public R<String> delete(String ids){
-        Long id = Long.valueOf(ids);
-        log.info("删除的ID",id);
-        categoryService.removeById(id);
+    public R<String> delete(Long ids){
+
+        log.info("删除的ID",ids);
+        categoryService.removeById(ids);
         System.out.println("执行了分类删除");
         return R.success("删除成功");
     }
 
+    @PutMapping
+    public R<String> update(@RequestBody Category category,HttpServletRequest request){
+        Employee employee = (Employee) request.getSession().getAttribute("employee");
+        category.setUpdateTime(new Date());
+        category.setUpdateUser(employee.getId());
+        categoryService.updateById(category);
+        return R.success("修改成功!");
+    }
 }
