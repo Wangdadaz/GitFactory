@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.List;
 
 //2022-05-2022/5/12-22:43
 @Slf4j
@@ -64,5 +65,20 @@ public class CategoryController {
         category.setUpdateUser(employee.getId());
         categoryService.updateById(category);
         return R.success("修改成功!");
+    }
+
+
+
+    @GetMapping("/list")
+    public R<List<Category>> list(Category category){
+        //在菜品管理的菜品分类下拉选项查询
+
+        LambdaQueryWrapper<Category> categoryLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        categoryLambdaQueryWrapper.eq(category.getType()!=null,Category::getType,category.getType())
+                .orderByAsc(Category::getSort).orderByDesc(Category::getUpdateTime);
+        List<Category> list = categoryService.list(categoryLambdaQueryWrapper);
+
+        return R.success(list);
+
     }
 }

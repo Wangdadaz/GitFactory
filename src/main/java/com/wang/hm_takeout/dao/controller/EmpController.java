@@ -96,9 +96,12 @@ public class EmpController {
     }
 
     @PutMapping
-    public R<String> update(@RequestBody Employee emp){
+    public R<String> update(@RequestBody Employee emp,HttpServletRequest request){
 //        {id: 3, status: 0} 响应的是一个josn对象 使用emp封装
+        Employee employee1 = (Employee) request.getSession().getAttribute("employee");
         log.info("修改前的emp对象{}",emp);
+        emp.setUpdateTime(new Date());
+        emp.setUpdateUser(employee1.getId());
         boolean b = employee.updateById(emp);
         return R.success(b ? "修改成功":"修改失败");
     }
