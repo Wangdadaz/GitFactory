@@ -7,16 +7,17 @@ import lombok.Data;
 import org.springframework.stereotype.Repository;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * 菜品口味关系表
- * @TableName dish_flavor
+ * 套餐
+ * @TableName setmeal
  */
-@TableName(value ="dish_flavor")
+@TableName(value ="setmeal")
 @Data
 @Repository
-public class DishFlavor implements Serializable {
+public class Setmeal implements Serializable {
     /**
      * 主键
      */
@@ -24,19 +25,39 @@ public class DishFlavor implements Serializable {
     private Long id;
 
     /**
-     * 菜品
+     * 菜品分类id
      */
-    private Long dishId;
+    private Long categoryId;
 
     /**
-     * 口味名称
+     * 套餐名称
      */
     private String name;
 
     /**
-     * 口味数据list
+     * 套餐价格
      */
-    private String value;
+    private BigDecimal price;
+
+    /**
+     * 状态 0:停用 1:启用
+     */
+    private Integer status;
+
+    /**
+     * 编码
+     */
+    private String code;
+
+    /**
+     * 描述信息
+     */
+    private String description;
+
+    /**
+     * 图片
+     */
+    private String image;
 
     /**
      * 创建时间

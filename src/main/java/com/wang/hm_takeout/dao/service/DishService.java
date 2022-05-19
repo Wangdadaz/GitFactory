@@ -4,6 +4,7 @@ package com.wang.hm_takeout.dao.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wang.hm_takeout.dao.domain.Dish;
 import com.wang.hm_takeout.dao.dto.DishDto;
+import org.apache.ibatis.annotations.Param;
 
 /**
 * @author 86182
@@ -15,4 +16,7 @@ public interface DishService extends IService<Dish> {
 
     public void insert(DishDto dishDto);
 
+    public DishDto selectIDDishDto(@Param("id") Long id);
+
+    public void removeAndFlavor(Long ids);
 }

@@ -1,5 +1,7 @@
 package com.wang.hm_takeout.dao.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wang.hm_takeout.dao.domain.Dish;
 import com.wang.hm_takeout.dao.domain.DishFlavor;
@@ -7,6 +9,7 @@ import com.wang.hm_takeout.dao.dto.DishDto;
 import com.wang.hm_takeout.dao.mapper.DishMapper;
 import com.wang.hm_takeout.dao.service.DishFlavorService;
 import com.wang.hm_takeout.dao.service.DishService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,6 +49,32 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish>
 
 
         dishFlavorService.saveBatch(flavors);
+    }
+
+    @Override
+    public DishDto selectIDDishDto(Long id) {
+        Dish byId = this.getById(id);
+        DishDto dishDto = new DishDto();
+
+        BeanUtils.copyProperties(byId,dishDto);
+
+        LambdaUpdateWrapper<DishFlavor> dishFlavorLambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+        dishFlavorLambdaUpdateWrapper.eq(DishFlavor::getDishId,id);
+
+        List<DishFlavor> list = dishFlavorService.list(dishFlavorLambdaUpdateWrapper);
+
+        dishDto.setFlavors(list);
+
+
+        return dishDto;
+    }
+
+    @Override
+    public void removeAndFlavor(Long ids) {
+        this.removeById(ids);
+        LambdaQueryWrapper<DishFlavor> objectLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        objectLambdaQueryWrapper.eq(dishFlavor -> dishFlavor.getDishId(),ids);
+        dishFlavorService.remove(objectLambdaQueryWrapper);
     }
 }
 
