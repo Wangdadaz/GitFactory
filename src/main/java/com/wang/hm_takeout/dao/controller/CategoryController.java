@@ -81,4 +81,6 @@ public class CategoryController {
         return R.success(list);
 
     }
+
+//    http://localhost:8080/dish/list?categoryId=1397844263642378242
 }

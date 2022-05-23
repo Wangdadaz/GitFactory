@@ -120,4 +120,15 @@ public class DishController {
         return R.success(dishDto);
     }
 
+
+    @GetMapping("/list")
+    public R<List<Dish>> list(Dish dish){
+        //在菜品管理的菜品分类下拉选项查询
+        log.info("获取到的参数：{}",dish.getCategoryId());
+        LambdaQueryWrapper<Dish> categoryLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        categoryLambdaQueryWrapper.eq(Dish::getCategoryId,dish.getCategoryId());
+        List<Dish> list = dishService.list(categoryLambdaQueryWrapper);
+        return R.success(list);
+    }
+
 }
