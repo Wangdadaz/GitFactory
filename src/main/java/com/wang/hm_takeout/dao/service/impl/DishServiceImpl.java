@@ -11,9 +11,11 @@ import com.wang.hm_takeout.dao.service.DishFlavorService;
 import com.wang.hm_takeout.dao.service.DishService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -69,11 +71,21 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish>
         return dishDto;
     }
 
+
+
+    @Value("${reggie.path}")
+    String path;
     @Override
     public void removeAndFlavor(Long ids) {
+
+        Dish byId = this.getById(ids);
+        String image = byId.getImage();
+
+        File file = new File(path+image);
+        file.delete();
         this.removeById(ids);
         LambdaQueryWrapper<DishFlavor> objectLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        objectLambdaQueryWrapper.eq(dishFlavor -> dishFlavor.getDishId(),ids);
+        objectLambdaQueryWrapper.eq(DishFlavor::getDishId,ids);
         dishFlavorService.remove(objectLambdaQueryWrapper);
     }
 }

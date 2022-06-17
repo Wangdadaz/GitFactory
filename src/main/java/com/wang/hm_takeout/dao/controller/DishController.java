@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wang.hm_takeout.dao.common.R;
 import com.wang.hm_takeout.dao.domain.Category;
 import com.wang.hm_takeout.dao.domain.Dish;
+import com.wang.hm_takeout.dao.domain.DishFlavor;
 import com.wang.hm_takeout.dao.domain.Employee;
 import com.wang.hm_takeout.dao.dto.DishDto;
 import com.wang.hm_takeout.dao.service.impl.CategoryServiceImpl;
@@ -122,13 +123,37 @@ public class DishController {
 
 
     @GetMapping("/list")
-    public R<List<Dish>> list(Dish dish){
+    public R<List<DishDto>> list(Dish dish){
         //在菜品管理的菜品分类下拉选项查询
         log.info("获取到的参数：{}",dish.getCategoryId());
         LambdaQueryWrapper<Dish> categoryLambdaQueryWrapper = new LambdaQueryWrapper<>();
         categoryLambdaQueryWrapper.eq(Dish::getCategoryId,dish.getCategoryId());
         List<Dish> list = dishService.list(categoryLambdaQueryWrapper);
-        return R.success(list);
+
+
+        List<DishDto> dishDtoList = list.stream().map(dishs -> {
+            DishDto dishDto = new DishDto();  //创建dishdto对象
+            BeanUtils.copyProperties(dishs, dishDto);  //将dish复制到dishdto中
+            Long categoryId = dishDto.getCategoryId();//获取分类的ID
+            Category byId = categoryService.getById(categoryId);//通过ID查询分类对象
+            if (byId!=null){//判断查询结果
+                String name1 = byId.getName();//分类名字
+                dishDto.setCategoryName(name1);//将分类名赋值给dishdto
+            }
+
+
+            Long id = dishs.getId();
+            LambdaQueryWrapper<DishFlavor> dishFlavorLambdaQueryWrapper = new LambdaQueryWrapper<>();
+            dishFlavorLambdaQueryWrapper.eq(DishFlavor::getDishId,id);
+            List<DishFlavor> list1 = dishFlavorService.list(dishFlavorLambdaQueryWrapper);
+
+            dishDto.setFlavors(list1);
+
+            return dishDto;
+        }).collect(Collectors.toList());
+
+
+        return R.success(dishDtoList);
     }
 
 }

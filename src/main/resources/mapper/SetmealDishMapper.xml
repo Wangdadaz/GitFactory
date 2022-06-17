@@ -6,7 +6,7 @@
 
     <resultMap id="BaseResultMap" type="com.wang.hm_takeout.dao.domain.SetmealDish">
             <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="setmealId" column="setmeal_id" jdbcType="VARCHAR"/>
+            <result property="setmealId" column="setmeal_id" jdbcType="BIGINT"/>
             <result property="dishId" column="dish_id" jdbcType="VARCHAR"/>
             <result property="name" column="name" jdbcType="VARCHAR"/>
             <result property="price" column="price" jdbcType="DECIMAL"/>

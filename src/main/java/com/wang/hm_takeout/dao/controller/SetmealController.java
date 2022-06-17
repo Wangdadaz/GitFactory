@@ -10,6 +10,7 @@ import com.wang.hm_takeout.dao.domain.Employee;
 import com.wang.hm_takeout.dao.domain.Setmeal;
 import com.wang.hm_takeout.dao.dto.SetmealDto;
 import com.wang.hm_takeout.dao.service.impl.CategoryServiceImpl;
+import com.wang.hm_takeout.dao.service.impl.DishServiceImpl;
 import com.wang.hm_takeout.dao.service.impl.SetmealDishServiceImpl;
 import com.wang.hm_takeout.dao.service.impl.SetmealServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +37,9 @@ public class SetmealController {
 
     @Autowired
     private CategoryServiceImpl categoryService;
+
+    @Autowired
+    private DishServiceImpl dishService;
 
     @GetMapping("/page")
     public R<Page> page(int page, int pageSize, String name){
@@ -64,12 +68,13 @@ public class SetmealController {
     }
 
 
-//    @GetMapping("/{id}")
-//    public R<DishDto> getDish(@PathVariable Long id){
-//        DishDto dishDto = dishService.selectIDDishDto(id);
-//        System.out.println(dishDto.toString());
-//        return R.success(dishDto);
-//    }
+    @GetMapping("/dish/{id}")
+    public R<Setmeal> getDish(@PathVariable Long id){
+
+        Setmeal byId = setmealService.getById(id);
+
+        return R.success(byId);
+    }
 
     //    http://localhost:8080/setmeal/status/0?ids=1415580119015145474
     @PostMapping("/status/{status}")
@@ -104,8 +109,33 @@ public class SetmealController {
         setmealService.saveSetmealDto(setmealDto,employee.getId());
 
 
-
-
         return R.success("添加成功！");
     }
+    //    http://localhost:8080/setmeal?ids=1528653298385604610  //删除请求
+    @DeleteMapping
+    public R<String> deleteSetmeal(@RequestParam List<Long> ids){
+
+        setmealService.removeSermeal(ids);
+
+        return R.success("删除成功");
+    }
+
+
+    //    请求 URL: http://localhost:8080/setmeal/list?categoryId=1413342269393674242&status=1
+
+
+    @RequestMapping("/list")
+    public R<List<Setmeal>> list(Setmeal setmeal){
+
+
+        LambdaQueryWrapper<Setmeal> setmealLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        setmealLambdaQueryWrapper.eq(Setmeal::getCategoryId,setmeal.getCategoryId())
+                .eq(Setmeal::getStatus,setmeal.getStatus());
+        List<Setmeal> list = setmealService.list(setmealLambdaQueryWrapper);
+
+        return R.success(list);
+    }
+
+
+    //    请求 URL: http://localhost:8080/setmeal/list?categoryId=1413342269393674242&status=1
 }

@@ -27,7 +27,7 @@ public class SetmealDish implements Serializable {
     /**
      * 套餐id 
      */
-    private String setmealId;
+    private Long setmealId;
 
     /**
      * 菜品id
