@@ -102,9 +102,20 @@ public class AddressBookController {
 
 
     @GetMapping("/default")
-    public R<AddressBook> getDefault(){
+    public R<AddressBook> getDefault(HttpSession session){
+
+
+        String phone = (String)session.getAttribute("phone");
+
+        LambdaQueryWrapper<User> userLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        userLambdaQueryWrapper.eq(User::getPhone,phone);
+        User one1 = userService.getOne(userLambdaQueryWrapper);
+
+        Long id = one1.getId();
+
+
         LambdaQueryWrapper<AddressBook> addressBookLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        addressBookLambdaQueryWrapper.eq(AddressBook::getIsDefault,1);
+        addressBookLambdaQueryWrapper.eq(AddressBook::getIsDefault,1).eq(AddressBook::getUserId,id);;
 
         AddressBook one = addressBookService.getOne(addressBookLambdaQueryWrapper);
         return R.success(one);
