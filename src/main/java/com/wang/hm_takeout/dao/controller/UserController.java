@@ -7,12 +7,13 @@ import com.wang.hm_takeout.dao.domain.User;
 import com.wang.hm_takeout.dao.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpSession;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/user")
@@ -23,17 +24,18 @@ public class UserController {
     private UserService userService;
 
 
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @PostMapping("/login")
-    public R<User> login(@RequestBody User user, HttpSession session){
+    public R<User> login(@RequestBody User user){
 
 
         String phone = user.getPhone();
 
-        session.setAttribute("phone",phone);
+        redisTemplate.opsForValue().set("phone",phone,2, TimeUnit.HOURS);
+//        session.setAttribute("phone",phone);
         if (StringUtils.isNotEmpty(phone)){
-
-
             LambdaQueryWrapper<User> userLambdaQueryWrapper = new LambdaQueryWrapper<>();
             userLambdaQueryWrapper.eq(User::getPhone,phone);
             User one = userService.getOne(userLambdaQueryWrapper);
@@ -52,8 +54,8 @@ public class UserController {
 //    请求 URL: http://localhost:8080/user/loginout
 
     @PostMapping("/loginout")
-    public R<String> loginout(HttpSession session){
-        session.removeAttribute("phone");
+    public R<String> loginout(){
+        redisTemplate.delete("phone");
         return R.success("已退出");
 
     }

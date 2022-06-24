@@ -7,10 +7,10 @@ import com.wang.hm_takeout.dao.domain.Orders;
 import com.wang.hm_takeout.dao.domain.User;
 import com.wang.hm_takeout.dao.service.impl.OrdersServiceImpl;
 import com.wang.hm_takeout.dao.service.impl.UserServiceImpl;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
 
 //2022-06-2022/6/13-20:46
 @RestController
@@ -24,12 +24,15 @@ public class OrdesController {
     @Resource
     private OrdersServiceImpl ordersService;
 
+    @Resource
+    private RedisTemplate redisTemplate;
+
 //    请求 URL: http://localhost:8080/order/userPage?page=1&pageSize=1
 
     @GetMapping("/userPage")
-    public R<Page> page(int page, int pageSize, HttpSession session){
+    public R<Page> page(int page, int pageSize){
 
-        String phone = (String)session.getAttribute("phone");
+        String phone = (String) redisTemplate.opsForValue().get("phone");
         LambdaQueryWrapper<User> userLambdaQueryWrapper = new LambdaQueryWrapper<>();
         userLambdaQueryWrapper.eq(User::getPhone,phone);
         User one = userService.getOne(userLambdaQueryWrapper);
@@ -53,9 +56,9 @@ public class OrdesController {
 //    请求 URL: http://localhost:8080/order/submit
 
     @PostMapping("/submit")
-    public R<String> submit(@RequestBody Orders orders, HttpSession session){
+    public R<String> submit(@RequestBody Orders orders){
 //        {remark: "", payMethod: 1, addressBookId: "1537434928755539970"}
-        String phone = (String)session.getAttribute("phone");
+        String phone = (String) redisTemplate.opsForValue().get("phone");
         LambdaQueryWrapper<User> userLambdaQueryWrapper = new LambdaQueryWrapper<>();
         userLambdaQueryWrapper.eq(User::getPhone,phone);
         User one = userService.getOne(userLambdaQueryWrapper);

@@ -7,10 +7,10 @@ import com.wang.hm_takeout.dao.domain.AddressBook;
 import com.wang.hm_takeout.dao.domain.User;
 import com.wang.hm_takeout.dao.service.impl.AddressBookServiceImpl;
 import com.wang.hm_takeout.dao.service.impl.UserServiceImpl;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.List;
 
@@ -26,10 +26,12 @@ public class AddressBookController {
     @Resource
     private AddressBookServiceImpl addressBookService;
 
+    @Resource
+    private RedisTemplate redisTemplate;
 
     @PostMapping
-    private R<String> add(@RequestBody AddressBook addressBook, HttpSession session){
-        String phone = (String)session.getAttribute("phone");
+    private R<String> add(@RequestBody AddressBook addressBook){
+        String phone = (String) redisTemplate.opsForValue().get("phone");
 
         LambdaQueryWrapper<User> userLambdaQueryWrapper = new LambdaQueryWrapper<>();
         userLambdaQueryWrapper.eq(User::getPhone,phone);
@@ -49,9 +51,9 @@ public class AddressBookController {
 //    请求 URL: http://localhost:8080/addressBook/list
 
     @GetMapping("/list")
-    public R<List<AddressBook>> list(HttpSession session){
+    public R<List<AddressBook>> list(){
 
-        String phone = (String)session.getAttribute("phone");
+        String phone = (String) redisTemplate.opsForValue().get("phone");
 
         LambdaQueryWrapper<User> userLambdaQueryWrapper = new LambdaQueryWrapper<>();
         userLambdaQueryWrapper.eq(User::getPhone,phone);
@@ -77,13 +79,14 @@ public class AddressBookController {
         Long id = addressBook.getId();
 
 
+        String phone = (String) redisTemplate.opsForValue().get("phone");
         LambdaQueryWrapper<AddressBook> addressBookLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        addressBookLambdaQueryWrapper.eq(AddressBook::getIsDefault,1);
+        addressBookLambdaQueryWrapper.eq(AddressBook::getIsDefault,1).eq(AddressBook::getPhone,phone);
 
         if (addressBookService.getOne(addressBookLambdaQueryWrapper)!=null){
 
             LambdaUpdateWrapper<AddressBook> addressBookLambdaUpdateWrapper = new LambdaUpdateWrapper<>();
-            addressBookLambdaUpdateWrapper.set(AddressBook::getIsDefault,0);
+            addressBookLambdaUpdateWrapper.eq(AddressBook::getPhone,phone).set(AddressBook::getIsDefault,0);
 
             addressBookService.update(addressBookLambdaUpdateWrapper);
 
@@ -102,10 +105,10 @@ public class AddressBookController {
 
 
     @GetMapping("/default")
-    public R<AddressBook> getDefault(HttpSession session){
+    public R<AddressBook> getDefault(){
 
 
-        String phone = (String)session.getAttribute("phone");
+        String phone = (String) redisTemplate.opsForValue().get("phone");
 
         LambdaQueryWrapper<User> userLambdaQueryWrapper = new LambdaQueryWrapper<>();
         userLambdaQueryWrapper.eq(User::getPhone,phone);

@@ -16,6 +16,8 @@ import com.wang.hm_takeout.dao.service.impl.SetmealServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,6 +42,8 @@ public class SetmealController {
 
     @Autowired
     private DishServiceImpl dishService;
+
+
 
     @GetMapping("/page")
     public R<Page> page(int page, int pageSize, String name){
@@ -69,6 +73,7 @@ public class SetmealController {
 
 
     @GetMapping("/dish/{id}")
+    @Cacheable(value = "Setmeal",key = "#id")
     public R<Setmeal> getDish(@PathVariable Long id){
 
         Setmeal byId = setmealService.getById(id);
@@ -98,6 +103,7 @@ public class SetmealController {
 
 //    http://localhost:8080/setmeal 添加套餐的请求路径
     @PostMapping
+    @CacheEvict(value = "Setmeal",allEntries = true)
     public R<String> addSetmeal(@RequestBody SetmealDto setmealDto,HttpServletRequest request){
 
         Employee employee = (Employee)request.getSession().getAttribute("employee");
@@ -113,6 +119,7 @@ public class SetmealController {
     }
     //    http://localhost:8080/setmeal?ids=1528653298385604610  //删除请求
     @DeleteMapping
+    @CacheEvict(value = "Setmeal",allEntries = true)
     public R<String> deleteSetmeal(@RequestParam List<Long> ids){
 
         setmealService.removeSermeal(ids);
@@ -124,6 +131,7 @@ public class SetmealController {
     //    请求 URL: http://localhost:8080/setmeal/list?categoryId=1413342269393674242&status=1
 
 
+    @Cacheable(value = "Setmeal",key = "#setmeal.id+'_'+#setmeal.status")
     @RequestMapping("/list")
     public R<List<Setmeal>> list(Setmeal setmeal){
 

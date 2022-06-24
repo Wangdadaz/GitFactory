@@ -7,10 +7,11 @@ import com.wang.hm_takeout.dao.domain.User;
 import com.wang.hm_takeout.dao.service.impl.ShoppingCartServiceImpl;
 import com.wang.hm_takeout.dao.service.impl.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.List;
 
@@ -28,10 +29,13 @@ public class ShoppingCartController {
     private UserServiceImpl userService;
 
 
-    @GetMapping("/list")
-    public R<List<ShoppingCart>> list(HttpSession session){
+    @Autowired
+    private RedisTemplate redisTemplate;
 
-        String phone = (String)session.getAttribute("phone");
+    @GetMapping("/list")
+    public R<List<ShoppingCart>> list(){
+
+        String phone = (String) redisTemplate.opsForValue().get("phone");
 
         LambdaQueryWrapper<User> userLambdaQueryWrapper = new LambdaQueryWrapper<>();
         userLambdaQueryWrapper.eq(User::getPhone,phone);
@@ -51,8 +55,8 @@ public class ShoppingCartController {
 
 
     @PostMapping("/add")
-    public R<String> add(@RequestBody ShoppingCart shoppingCart, HttpSession session){
-        String phone = (String) session.getAttribute("phone");
+    public R<String> add(@RequestBody ShoppingCart shoppingCart){
+        String phone = (String) redisTemplate.opsForValue().get("phone");
         LambdaQueryWrapper<User> userLambdaQueryWrapper = new LambdaQueryWrapper<>();
         userLambdaQueryWrapper.eq(User::getPhone,phone);
         User one = userService.getOne(userLambdaQueryWrapper);
@@ -71,10 +75,10 @@ public class ShoppingCartController {
 
 
     @DeleteMapping("/clean")
-    public R<String> sub(HttpSession session){
+    public R<String> clean(){
 
 
-        String phone = (String)session.getAttribute("phone");
+        String phone = (String) redisTemplate.opsForValue().get("phone");
 
         LambdaQueryWrapper<User> userLambdaQueryWrapper = new LambdaQueryWrapper<>();
         userLambdaQueryWrapper.eq(User::getPhone,phone);
@@ -91,6 +95,22 @@ public class ShoppingCartController {
 
 
         return R.success("已清空");
+    }
+
+//    请求 URL: http://localhost:8080/shoppingCart/sub
+
+    @PostMapping("/sub")
+    public R<String> sub(ShoppingCart shoppingCart){
+
+        LambdaQueryWrapper<ShoppingCart> shoppingCartLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        shoppingCartLambdaQueryWrapper.eq(ShoppingCart::getDishId,shoppingCart.getDishId());
+        shoppingCartService.remove(shoppingCartLambdaQueryWrapper);
+        LambdaQueryWrapper<ShoppingCart> CartLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        shoppingCartLambdaQueryWrapper.eq(ShoppingCart::getSetmealId,shoppingCart.getSetmealId());
+        shoppingCartService.remove(CartLambdaQueryWrapper);
+
+        return R.success("删除成功");
+
     }
 
 }
