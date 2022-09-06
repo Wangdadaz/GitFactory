@@ -1,0 +1,11 @@
+# 应用名称
+spring:
+  application:
+    name: demoMongo
+  data:
+    mongodb:
+      host: 43.143.94.251
+      database: wangdada
+      port: 27017
+
+
