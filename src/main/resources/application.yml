@@ -7,5 +7,7 @@ spring:
       host: 43.143.94.251
       database: wangdada
       port: 27017
+      username: root
+      password: root
 
 
