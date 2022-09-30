@@ -1,7 +1,7 @@
 package com.example.demomongo.service;//wangDD
 
 import com.example.demomongo.dao.StudentMapper;
-import com.example.demomongo.po.Student;
+import com.example.demomongo.po.g01Student;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,14 +14,20 @@ public class StudentService {
     @Autowired
     private StudentMapper student;
 
-    public void saveStudent(Student s){
+    public void saveStudent(g01Student s){
         student.save(s);
     }
-    public void deleteStudentById(Student s){
+    public void deleteStudentById(g01Student s){
         student.deleteById(s);
     }
-    public List<Student> listStudent(){
-        List<Student> all = student.findAll();
+    public List<g01Student> listStudent(){
+        List<g01Student> all = student.findAll();
         return all;
+    }
+
+    public boolean delete(){
+
+        student.deleteAll();
+        return true;
     }
 }

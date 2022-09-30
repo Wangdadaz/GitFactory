@@ -4,10 +4,15 @@ spring:
     name: demoMongo
   data:
     mongodb:
-      host: 43.143.94.251
-      database: wangdada
-      port: 27017
-      username: root
-      password: root
+      host: mongo.zhledu.cn
+      database: g01
+      username: g01
+      password: abc@1
+#    mongodb:
+#      host: 43.143.94.251
+#      database: wangdada
+#      port: 27017
+#      username: root
+#      password: root
 
 
