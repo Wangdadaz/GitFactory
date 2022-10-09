@@ -30,4 +30,10 @@ public class StudentService {
         student.deleteAll();
         return true;
     }
+
+
+    public boolean update(){
+//        student.
+        return true;
+    }
 }

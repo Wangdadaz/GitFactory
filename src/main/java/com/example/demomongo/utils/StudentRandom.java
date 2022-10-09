@@ -14,7 +14,7 @@ public class StudentRandom {
     public g01Student create(){
         String[] strings = {"大数据专业","计算机专业"};
         g01Student g01Student = new g01Student();
-        String chinese = ChineseName.getChinese();
+        String chinese = ChineseName.name();
         g01Student.setName(chinese);
         long l = System.currentTimeMillis();
         g01Student.setSon(String.valueOf(l));

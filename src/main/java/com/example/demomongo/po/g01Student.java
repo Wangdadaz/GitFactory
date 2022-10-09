@@ -10,6 +10,14 @@ import java.io.Serializable;
 //@CompoundIndexes()  复合索引
 @Document(collection = "g01student")
 public class g01Student implements Serializable {
+    private String name ;  //名字
+    private String son;    //学号
+    private String sex;     //性别
+    private Integer age;    //年龄
+    private String major;   //专业
+    private String idcard;  //身份证
+    private String address; //地址
+
     public g01Student() {
     }
 
@@ -78,14 +86,6 @@ public class g01Student implements Serializable {
         this.idcard = idcard;
         this.address = address;
     }
-
-    private String name ;  //名字
-    private String son;    //学号
-    private String sex;     //性别
-    private Integer age;    //年龄
-    private String major;   //专业
-    private String idcard;  //身份证
-    private String address; //地址
 
 
 }

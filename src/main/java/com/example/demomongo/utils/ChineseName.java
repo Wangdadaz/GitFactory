@@ -1,11 +1,15 @@
 package com.example.demomongo.utils;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Repository;
+
 import java.io.UnsupportedEncodingException;
 import java.util.Random;
 
+@Repository
 public class ChineseName {
 
-    public static void main(String[] args) {
+    public static String name() {
         Random random=new Random(System.currentTimeMillis());
         /* 598 百家姓 */
         String[] Surname= {"赵","钱","孙","李","周","吴","郑","王","冯","陈","褚","卫","蒋","沈","韩","杨","朱","秦","尤","许",
@@ -43,7 +47,7 @@ public class ChineseName {
         }else {
             name+=getChinese();
         }
-        System.out.println(name);
+       return name;
     }
 
     public static String getChinese() {
